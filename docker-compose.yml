@@ -1,0 +1,28 @@
+version: '3.8' # YAMLのバージョン指定
+
+services: # サービス（コンテナ）を定義するセクション
+  wordpress: # wordpressサービスの定義
+    image: wordpress # WordPress公式イメージを使用
+    restart: always # 常にコンテナが起動するよう、再起動ポリシーを指定
+    ports: # ポート公開指定
+      - 8080:80 # ホスト側のポート8080を、コンテナ内のポート80にマッピング
+    environment: # コンテナ内で利用できる環境変数の指定
+      WORDPRESS_DB_HOST: db # dbという名称のホスト（この例ではdbサービス）に接続
+      WORDPRESS_DB_USER: exampleuser # ユーザー名を指定
+      WORDPRESS_DB_PASSWORD: examplepass  # パスワードを指定
+      WORDPRESS_DB_NAME: exampledb # WordPressが利用するMySQLデータベース名
+    volumes: # ボリュームに関する指定
+      - wordpress:/var/www/html # wordpressを/var/www/htmlにマウント
+  db: # dbサービスの定義
+    image: mysql:5.7 # MySQL 5.7イメージを使用
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1' # ランダムにMySQLのrootパスワードを生成（起動後、ログで確認可能）
+    volumes :
+      - db:/var/lib/mysql # dbを/var/lib/mysqlにマウント
+volumes: # ボリュームを定義するセク              
+  wordpress:
+  db:
